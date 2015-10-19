@@ -7,8 +7,7 @@ using Otter;
 
 namespace Slipshod
 {
-    class Assets
+    class MenuState : Scene
     {
-        public static string MAP_TESTONE = "../../Assets/Maps/testone.tmx";
     }
 }

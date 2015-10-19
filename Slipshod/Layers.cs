@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Otter;
 
 namespace Slipshod
 {
-    class Assets
+    class Layers
     {
-        public static string MAP_TESTONE = "../../Assets/Maps/testone.tmx";
+        public static int PLAYER = 40;
+        public static int BULLET = 30;
+        public static int FG = 20;
     }
 }

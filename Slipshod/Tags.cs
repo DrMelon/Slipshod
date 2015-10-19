@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Otter;
 
 namespace Slipshod
 {
-    class Assets
+    class Tags
     {
-        public static string MAP_TESTONE = "../../Assets/Maps/testone.tmx";
+        public static int PLAYER_COLLISION = 1;
+        public static int GROUND_SOLID_COLLISION = 11;
     }
 }
