@@ -23,9 +23,15 @@ namespace Slipshod
         public Tilemap SolidLayer;
         public Tilemap DecorationLayer;
         public GridCollider CollisionLayer;
+        
 
         // Reference to Player
         public Player thePlayer;
+
+        // Target camera location, useful for player tracking & cutscene stuff
+        public Vector2 TargetCamera;
+        public int CameraMode;
+        public float CameraLerpSpeed = 4.0f;
 
         public LevelState(String LevelToLoad = null)
         {
@@ -36,6 +42,10 @@ namespace Slipshod
             {
                 Util.Log("ERROR! Player does not exist.");
             }
+
+            // Initialize Camera Pos and Mode
+            CameraMode = Tags.CAMERA_PLAYERFOLLOW;
+            TargetCamera = new Vector2(0, 0);
 
         }
         
@@ -64,6 +74,15 @@ namespace Slipshod
             // Objects go between the solid and decoration layers
             CreateLevelObjects();
 
+            // Set camera bounds based on map size.
+            UseCameraBounds = true;
+            ApplyCamera = true;
+            CameraBounds.X = 0;
+            CameraBounds.Y = 0;
+            CameraBounds.Width = LoadedLevel.PixelWidth;
+            CameraBounds.Height = LoadedLevel.PixelHeight;
+
+
             // Finish up
             Entity ForegroundEnt = new Entity();
             ForegroundEnt.AddGraphic(DecorationLayer);
@@ -87,6 +106,34 @@ namespace Slipshod
             }
         }
 
+        public void UpdateCamera()
+        {
+            // Update the camera.
+            
+            // If we're in follow mode:
+            if(CameraMode == Tags.CAMERA_PLAYERFOLLOW)
+            {
+                // Facing Left
+                if(thePlayer.mySprite.FlippedX)
+                {
+                    TargetCamera.X = (thePlayer.X) - 80.0f;
+                }
+                else // Facing Right
+                {
+                    TargetCamera.X = (thePlayer.X) + 80.0f;
+                }
+
+                // Put camera above player a little.
+                TargetCamera.Y = thePlayer.Y + 16.0f;
+
+                // Smoothly lerp camera.
+                CenterCamera(Util.Approach(CameraCenterX, TargetCamera.X, CameraLerpSpeed), Util.Approach(CameraCenterY, TargetCamera.Y, CameraLerpSpeed));
+            }
+
+
+            // Move camera towards camera position.
+        }
+
         public override void Begin()
         {
             base.Begin();
@@ -100,6 +147,12 @@ namespace Slipshod
         public override void Update()
         {
             base.Update();
+        }
+
+        public override void UpdateLast()
+        {
+            UpdateCamera();
+            base.UpdateLast();
         }
 
         public override void Render()

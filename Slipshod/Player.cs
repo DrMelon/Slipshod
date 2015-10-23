@@ -60,17 +60,64 @@ namespace Slipshod
 
         public void HandleInput()
         {
+            // Flip sprite dependant on direction.
+            if(Global.theController.DPad.X < 0)
+            {
+                mySprite.FlippedX = true;
+            }
+            else if(Global.theController.DPad.X > 0)
+            {
+                mySprite.FlippedX = false;
+            }
 
+            if(Global.theController.X.Pressed)
+            {
+                FireWeapon();
+            }
+            if (Global.theController.X.Released)
+            {
+                //ReleaseWeapon(); // For charge/beam-type weapons.
+            }
+        }
+
+        public void FireWeapon()
+        {
+            // CurrentWeapon.BeginFire()
+            // Temp: Just fires a generic bullet.
+            int facingRight = 1;
+            if(mySprite.FlippedX)
+            {
+                facingRight = -1;
+            }
+            Bullet newBullet;
+            if(Global.theController.DPad.Y < 0)
+            {
+                newBullet = new Bullet(new Vector2(0, -10), X, Y);
+            }
+            else
+            {
+                newBullet = new Bullet(new Vector2(facingRight * 10, 0), X, Y);
+                myPlatforming.ExtraSpeed.X = facingRight * -100f;
+                myPlatforming.ExtraSpeed.Y = -30f;
+            }
+
+            newBullet.NumBounces = 1;
+            newBullet.Gravity = new Vector2(0, 0.5f);
+
+
+            Scene.Add(newBullet);
         }
 
         public void UpdateMoveState()
         {
-
+            // Atrohpy ExtraSpeed
+            myPlatforming.ExtraSpeed.X = Util.Approach(myPlatforming.ExtraSpeed.X, 0, 10.0f);
+            myPlatforming.ExtraSpeed.Y = Util.Approach(myPlatforming.ExtraSpeed.Y, 0, 10.0f);
         }
 
         public void UpdateAnimations()
         {
-
+            
         }
 
         public override void Update()
