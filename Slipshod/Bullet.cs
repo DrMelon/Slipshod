@@ -7,7 +7,7 @@ using Otter;
 
 namespace Slipshod
 {
-    class Bullet : Entity
+    class Bullet : Entity, ICloneable
     {
         // Bullet class is for all fireable projectiles in the game - friendly and enemy.
         public int Affiliation = Tags.BULLET_FRIENDLY;
@@ -17,6 +17,8 @@ namespace Slipshod
         public Vector2 maxSpeed;
         public int NumBounces = 0; // number of bounces/ricochets
         public Vector2 Gravity = new Vector2(0, 0);
+        public int BulletType = 0; // 0 = pellet, 1 = beam, 2 = rocket, 3 = ???
+        
         
 
         public Bullet(Vector2 fired, float x = 0, float y = 0)
@@ -30,6 +32,8 @@ namespace Slipshod
             maxSpeed.X = 50;
             maxSpeed.Y = 50;
             mySpeed = fired;
+
+            
 
             // Create sprite
             mySprite = Image.CreateRectangle(16, 16, Color.Yellow);
@@ -45,6 +49,11 @@ namespace Slipshod
             Layer = Layers.BULLET;
 
             LifeSpan = 600.0f;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         public override void Update()

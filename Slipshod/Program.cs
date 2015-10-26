@@ -13,7 +13,7 @@ namespace Slipshod
         {
             // Create game and window
             Global.theGame = new Game("Slipshod", 400, 240, 60, false);
-            Global.theGame.SetWindowScale(2);
+            Global.theGame.SetWindowScale(3.0f);
 
             // Create (load?) player session
             Global.thePlayerSession = Global.theGame.AddSession("Player1");

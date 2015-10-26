@@ -20,16 +20,19 @@ namespace Slipshod
         // Movement Stuff
         public enum MoveType { GROUND, FALL };
 
+        // Weapon Pointer
+        public Weapon CurrentWeapon;
+
         public MoveType myMoveType = MoveType.GROUND;
 
 
-        public Player(float x=0, float y=0)
+        public Player(float x = 0, float y = 0)
         {
             X = x;
             Y = y;
 
             // Create and center sprite
-            mySprite = Image.CreateRectangle(16, 32, Color.White);
+            mySprite = new Image(Assets.GFX_PLAYER_TEST);
             mySprite.CenterOrigin();
             AddGraphic(mySprite);
 
@@ -56,6 +59,8 @@ namespace Slipshod
             // Set up Layer
             Layer = Layers.PLAYER;
 
+            // Create test weapon
+            CurrentWeapon = new Weapon(this) { BulletType = 0, WeaponName = "Kabang!" };
         }
 
         public void HandleInput()
@@ -82,30 +87,11 @@ namespace Slipshod
 
         public void FireWeapon()
         {
-            // CurrentWeapon.BeginFire()
-            // Temp: Just fires a generic bullet.
-            int facingRight = 1;
-            if(mySprite.FlippedX)
+            if(CurrentWeapon != null)
             {
-                facingRight = -1;
+                CurrentWeapon.TryFireWeapon();
             }
-            Bullet newBullet;
-            if(Global.theController.DPad.Y < 0)
-            {
-                newBullet = new Bullet(new Vector2(0, -10), X, Y);
-            }
-            else
-            {
-                newBullet = new Bullet(new Vector2(facingRight * 10, 0), X, Y);
-                myPlatforming.ExtraSpeed.X = facingRight * -100f;
-                myPlatforming.ExtraSpeed.Y = -30f;
-            }
-
-            newBullet.NumBounces = 1;
-            newBullet.Gravity = new Vector2(0, 0.5f);
-
-
-            Scene.Add(newBullet);
+            
         }
 
         public void UpdateMoveState()
@@ -124,9 +110,11 @@ namespace Slipshod
         {
             base.Update();
 
+            CurrentWeapon.Update();
             HandleInput();
             UpdateMoveState();
             UpdateAnimations();
+            
 
         }
     }

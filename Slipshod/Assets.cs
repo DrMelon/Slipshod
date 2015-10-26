@@ -10,5 +10,6 @@ namespace Slipshod
     class Assets
     {
         public static string MAP_TESTONE = "../../Assets/Maps/testone.tmx";
+        public static string GFX_PLAYER_TEST = "../../Assets/eye.png";
     }
 }
